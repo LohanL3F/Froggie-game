@@ -9,10 +9,11 @@ let score = 0; // Score du joueur
 let gameStarted = false; // État du jeu, démarré ou non
 let obstacleInterval; // Intervalle de déplacement de l'obstacle
 let gameover = document.getElementById("gameover");
+let isSliding = false; // pour savoir si la grenouille glisse
 
 // ÉTAT INITIAL (jeu non démarré)
 
-grenouille.style.backgroundImage = "url(frog-run-stable.png)"; // Image fixe de la grenouille
+grenouille.style.backgroundImage = "url(frog-sleep.gif)"; // Image fixe de la grenouille
 gameover.style.display = "none";
 
 // SAUT DE LA GRENOUILLE
@@ -37,7 +38,9 @@ function jump() {
           // Atteint le sol
           clearInterval(downInterval); // Arrête la descente
           isJumping = false; // Indique que la grenouille n'est plus en train de sauter
-          grenouille.style.backgroundImage = "url(frog-run.gif)"; // Retour à l'animation de course
+          grenouille.style.backgroundImage = isSliding
+            ? "url(frog-slide.png)"
+            : "url(frog-run.gif)"; // Retour à l'état normal ou slide
           // Effet pop à l'atterrissage
           grenouille.classList.add("pop");
           setTimeout(() => grenouille.classList.remove("pop"), 150);
@@ -49,6 +52,25 @@ function jump() {
       grenouille.style.bottom = jumpHeight + "px"; // Met à jour la position verticale de la grenouille
     }
   }, 10); // Vitesse de montée
+}
+// SLIDE
+function startSlide() {
+  if (isJumping || isSliding) return;
+  isSliding = true;
+  grenouille.style.height = "100px";
+  grenouille.style.width = "100px";
+  grenouille.style.bottom = "0px";
+  grenouille.style.backgroundImage = "url(frog-slide.png)";
+  grenouille.style.transform = "translateX(40px)";
+}
+
+function stopSlide() {
+  if (!isSliding) return;
+  isSliding = false;
+  grenouille.style.height = "100px";
+  grenouille.style.width = "100px";
+  grenouille.style.backgroundImage = "url(frog-run.gif)";
+  grenouille.style.transform = "translateX(0px)";
 }
 
 // Fonction pour le "POP" du score
@@ -72,86 +94,122 @@ function increaseScoreDynamic(points) {
 }
 
 // DÉPLACEMENT DE L'OBSTACLE
-
+// VITESSE DES OBSTACLES
 function getObstacleSpeed() {
-  // Vitesse de l'obstacle en fonction du score et changement du fond
-  if (score < 1000) {
-    return 20;
-  } else if (score < 2000) {
+  if (score < 1000) return 20;
+  else if (score < 2000) {
     grenouille.classList.add("sunset");
     background.style.backgroundImage = "url(LandscapeSunset.gif)";
     return 15;
-  } else if (score < 3000) {
-    return 10;
-  } else {
+  } else if (score < 3000) return 10;
+  else {
     grenouille.classList.add("night");
     background.style.backgroundImage = "url(LandscapeNight.gif)";
     return 9;
   }
 }
 
+// DÉPLACEMENT DES OBSTACLES
 function moveObstacle() {
-  let obstaclePos = 1000; // Position initiale de l'obstacle (à droite de l'écran)
-  obstacle.style.left = obstaclePos + "px"; // Place l'obstacle à sa position initiale
+  let obstaclePos = 1000;
+  obstacle.style.left = obstaclePos + "px";
+
+  // 0 = obstacle haut (jump), 1 = obstacle bas (slide)
+  let obstacleType = Math.random() < 0.5 ? 0 : 1;
+  setObstacleAppearance(obstacleType);
 
   let currentSpeed = getObstacleSpeed();
 
   obstacleInterval = setInterval(() => {
     if (obstaclePos < -60) {
-      // Si l'obstacle sort de l'écran à gauche
-      obstaclePos = 1000; // Réinitialise la position de l'obstacle
-      increaseScoreDynamic(100); // On augmente le score de 100 de manière dynamique avec effet pop
+      obstaclePos = 1000;
+      obstacleType = Math.random() < 0.5 ? 0 : 1;
+      setObstacleAppearance(obstacleType);
+      increaseScoreDynamic(100);
     } else {
-      obstaclePos -= 5; // Déplace l'obstacle vers la gauche
-      obstacle.style.left = obstaclePos + "px"; // Met à jour la position de l'obstacle
+      obstaclePos -= 5;
+      obstacle.style.left = obstaclePos + "px";
     }
 
-    let newSpeed = getObstacleSpeed(); // Vérifie si la vitesse doit changer
+    let newSpeed = getObstacleSpeed();
     if (newSpeed !== currentSpeed) {
-      // Si la vitesse a changé
-      clearInterval(obstacleInterval); // Arrête l'intervalle actuel
-      moveObstacle(); // Redémarre le déplacement de l'obstacle avec la nouvelle vitesse
+      clearInterval(obstacleInterval);
+      moveObstacle();
       return;
     }
 
-    // Collision
+    // COLLISION
+    const frogRect = grenouille.getBoundingClientRect();
+    const obsRect = obstacle.getBoundingClientRect();
+    let collided = false;
 
-    if (obstaclePos > 50 && obstaclePos < 100 && !isJumping) {
-      // Si l'obstacle est à la position de la grenouille et qu'elle est pas en saut
-      clearInterval(obstacleInterval); // Arrête le déplacement des obstacles
-      gameStarted = false; // Réinitialise l'état du jeu
+    if (frogRect.right > obsRect.left && frogRect.left < obsRect.right) {
+      if (obstacleType === 0 && !isJumping) collided = true;
+      if (obstacleType === 1 && !isSliding) collided = true;
+    }
+
+    if (collided) {
+      clearInterval(obstacleInterval);
+      gameStarted = false;
       gameover.style.display = "flex";
 
-      grenouille.style.backgroundImage = "url(frog-run-stable.png)"; // Remet l'image initiale de la grenouille
-      scorefinal.textContent = score; // Donne le score sur l'écran game over
-      score = 0; // Réinitialise le score
-      scoreEl.textContent = "Score: " + score; // Met à jour l'affichage du score
-      background.style.backgroundImage = "url(Landscape.gif)"; // Remet le fond initial
+      grenouille.style.backgroundImage = "url(frog-sleep.gif)";
+      scorefinal.textContent = "TON SCORE FINAL EST : " + score;
+      score = 0;
+      scoreEl.textContent = "Score: " + score;
+      background.style.backgroundImage = "url(Landscape.gif)";
       grenouille.classList.remove("sunset");
       grenouille.classList.remove("night");
     }
-  }, currentSpeed); // Vitesse de déplacement de l'obstacle
+  }, currentSpeed);
+}
+
+// Fonction pour définir visuellement l'obstacle selon son type
+function setObstacleAppearance(type) {
+  if (type === 0) {
+    obstacle.style.height = "160px";
+    obstacle.style.width = "80px";
+    obstacle.style.bottom = "0px";
+    obstacle.style.backgroundImage = "url(obstacle.png)";
+  } else {
+    obstacle.style.height = "100px";
+    obstacle.style.width = "100px";
+    obstacle.style.bottom = "0px";
+    obstacle.style.backgroundImage = "url(obstacle2.png)";
+  }
 }
 
 // DÉMARRAGE DU JEU
 
 function startGame() {
   if (!gameStarted) {
-    gameStarted = true; // Indique que le jeu a démarré
-    gameover.style.display = "none"; // enlève le message game over
-    grenouille.style.backgroundImage = "url(frog-run.gif)"; // La grenouille commence à courir
-    moveObstacle(); // Démarre le déplacement des obstacles
+    gameStarted = true;
+    gameover.style.display = "none";
+    grenouille.style.backgroundImage = "url(frog-run.gif)";
+    moveObstacle();
   }
 }
 
 // GESTION DU CLAVIER
 document.addEventListener("keydown", (e) => {
-  if (e.code === "Space" || e.code === "ArrowUp") {
-    // Si la touche espace est pressée
-    if (!gameStarted) {
-      startGame(); // Démarre le jeu si ce n'est pas déjà fait
-    } else {
-      jump(); // Fait sauter la grenouille
-    }
+  // Jump
+  if (
+    e.code === "Space" ||
+    e.code === "ArrowUp" ||
+    e.key.toLowerCase() === "z"
+  ) {
+    if (!gameStarted) startGame();
+    else jump();
+  }
+
+  // Slide
+  if (e.code === "ArrowDown" || e.key.toLowerCase() === "s") {
+    startSlide();
+  }
+});
+
+document.addEventListener("keyup", (e) => {
+  if (e.code === "ArrowDown" || e.key.toLowerCase() === "s") {
+    stopSlide();
   }
 });

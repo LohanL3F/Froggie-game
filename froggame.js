@@ -7,6 +7,7 @@ twerkMusic.volume = 0.1;
 const soundBtn = document.getElementById("sound");
 const music = new Audio("gameOST.mp3");
 music.loop = true;
+music.volume = 0.3;
 
 let soundEnabled = false;
 let scorefinal = document.getElementById("final-score");
@@ -285,3 +286,4 @@ document.addEventListener("keyup", (e) => {
     stopTwerk();
   }
 });
+

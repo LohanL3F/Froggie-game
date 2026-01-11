@@ -10,7 +10,7 @@ let gameStarted = false; // État du jeu, démarré ou non
 let obstacleInterval; // Intervalle de déplacement de l'obstacle
 let gameover = document.getElementById("gameover");
 let isSliding = false; // pour savoir si la grenouille glisse
-
+let isTwerking = false; // pour savoir si la grenouille twerk (mdrr)
 // ÉTAT INITIAL (jeu non démarré)
 
 grenouille.style.backgroundImage = "url(frog-sleep.gif)"; // Image fixe de la grenouille
@@ -46,12 +46,12 @@ function jump() {
           setTimeout(() => grenouille.classList.remove("pop"), 150);
         }
         jumpHeight -= 5; // Diminue la hauteur du saut
-      }, 10); // Vitesse de descente
+      }, 12); // Vitesse de descente
     } else {
       jumpHeight += 5; // Augmente la hauteur du saut
       grenouille.style.bottom = jumpHeight + "px"; // Met à jour la position verticale de la grenouille
     }
-  }, 10); // Vitesse de montée
+  }, 12); // Vitesse de montée
 }
 // SLIDE
 function startSlide() {
@@ -71,6 +71,26 @@ function stopSlide() {
   grenouille.style.width = "100px";
   grenouille.style.backgroundImage = "url(frog-run.gif)";
   grenouille.style.transform = "translateX(0px)";
+}
+
+// Twerk
+function startTwerk() {
+  if (isJumping || isSliding || isTwerking) return;
+  isTwerking = true;
+  grenouille.style.height = "100px";
+  grenouille.style.width = "100px";
+  grenouille.style.bottom = "0px";
+  grenouille.style.backgroundImage = "url(frog-twerk.gif)";
+  grenouille.style.transform = "translateY(3px)";
+}
+
+function stopTwerk() {
+  if (!isTwerking) return;
+  isTwerking = false;
+  grenouille.style.height = "100px";
+  grenouille.style.width = "100px";
+  grenouille.style.backgroundImage = "url(frog-run.gif)";
+  grenouille.style.transform = "translateY(0px)";
 }
 
 // Fonction pour le "POP" du score
@@ -121,7 +141,7 @@ function moveObstacle() {
   let currentSpeed = getObstacleSpeed();
 
   obstacleInterval = setInterval(() => {
-    if (obstaclePos < -60) {
+    if (obstaclePos < -80) {
       obstaclePos = 1000;
       obstacleType = Math.random() < 0.5 ? 0 : 1;
       setObstacleAppearance(obstacleType);
@@ -211,5 +231,18 @@ document.addEventListener("keydown", (e) => {
 document.addEventListener("keyup", (e) => {
   if (e.code === "ArrowDown" || e.key.toLowerCase() === "s") {
     stopSlide();
+  }
+});
+
+// Twerk
+document.addEventListener("keydown", (e) => {
+  if (e.code === "ArrowLeft" || e.key.toLowerCase() === "t") {
+    startTwerk();
+  }
+});
+
+document.addEventListener("keyup", (e) => {
+  if (e.code === "ArrowLeft" || e.key.toLowerCase() === "t") {
+    stopTwerk();
   }
 });

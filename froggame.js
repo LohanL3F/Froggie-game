@@ -1,6 +1,9 @@
 const grenouille = document.getElementById("frog");
 const obstacle = document.getElementById("obstacle");
 const scoreEl = document.getElementById("score");
+const twerkMusic = new Audio("CardiBWAP.mp3"); // Je suis tellement désolé pour cette ligne
+twerkMusic.loop = true;
+twerkMusic.volume = 0.6;
 
 let scorefinal = document.getElementById("final-score");
 let background = document.getElementById("game");
@@ -82,6 +85,8 @@ function startTwerk() {
   grenouille.style.bottom = "0px";
   grenouille.style.backgroundImage = "url(frog-twerk.gif)";
   grenouille.style.transform = "translateY(3px)";
+  twerkMusic.currentTime = 0;
+  twerkMusic.play();
 }
 
 function stopTwerk() {
@@ -91,6 +96,7 @@ function stopTwerk() {
   grenouille.style.width = "100px";
   grenouille.style.backgroundImage = "url(frog-run.gif)";
   grenouille.style.transform = "translateY(0px)";
+  twerkMusic.pause();
 }
 
 // Fonction pour le "POP" du score

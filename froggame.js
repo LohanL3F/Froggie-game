@@ -3,8 +3,12 @@ const obstacle = document.getElementById("obstacle");
 const scoreEl = document.getElementById("score");
 const twerkMusic = new Audio("CardiBWAP.mp3"); // Je suis tellement désolé pour cette ligne
 twerkMusic.loop = true;
-twerkMusic.volume = 0.6;
+twerkMusic.volume = 0.1;
+const soundBtn = document.getElementById("sound");
+const music = new Audio("gameOST.mp3");
+music.loop = true;
 
+let soundEnabled = false;
 let scorefinal = document.getElementById("final-score");
 let background = document.getElementById("game");
 let isJumping = false; // Saut de la grenouille
@@ -18,6 +22,20 @@ let isTwerking = false; // pour savoir si la grenouille twerk (mdrr)
 
 grenouille.style.backgroundImage = "url(frog-sleep.gif)"; // Image fixe de la grenouille
 gameover.style.display = "none";
+
+// BOUTON SON
+
+soundBtn.addEventListener("click", () => {
+  soundEnabled = !soundEnabled;
+
+  if (soundEnabled) {
+    music.play();
+    soundBtn.style.backgroundImage = "url(Sound.png)";
+  } else {
+    music.pause();
+    soundBtn.style.backgroundImage = "url(Soundmuted.png)";
+  }
+});
 
 // SAUT DE LA GRENOUILLE
 
@@ -87,6 +105,11 @@ function startTwerk() {
   grenouille.style.transform = "translateY(3px)";
   twerkMusic.currentTime = 0;
   twerkMusic.play();
+  if (soundEnabled) {
+    music.pause();
+    twerkMusic.currentTime = 0;
+    twerkMusic.play();
+  }
 }
 
 function stopTwerk() {
@@ -97,6 +120,10 @@ function stopTwerk() {
   grenouille.style.backgroundImage = "url(frog-run.gif)";
   grenouille.style.transform = "translateY(0px)";
   twerkMusic.pause();
+
+  if (soundEnabled && gameStarted) {
+    music.play();
+  }
 }
 
 // Fonction pour le "POP" du score
@@ -186,6 +213,8 @@ function moveObstacle() {
       background.style.backgroundImage = "url(Landscape.gif)";
       grenouille.classList.remove("sunset");
       grenouille.classList.remove("night");
+      music.pause();
+      music.currentTime = 0;
     }
   }, currentSpeed);
 }
@@ -213,6 +242,10 @@ function startGame() {
     gameover.style.display = "none";
     grenouille.style.backgroundImage = "url(frog-run.gif)";
     moveObstacle();
+
+    if (soundEnabled) {
+      music.play();
+    }
   }
 }
 

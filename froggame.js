@@ -25,6 +25,9 @@ musicSpeed.loop = true;
 musicSpeed.volume = 0.3;
 const fart = new Audio("fart.mp3");
 fart.volume = 0.3;
+const HELL = new Audio("HELLOST.mp3");
+HELL.loop = true;
+HELL.volume = 0.3;
 
 let jumpInterval = 12; // vitesse du setInterval
 let soundEnabled = false;
@@ -205,11 +208,19 @@ function getObstacleSpeed() {
     jumpInterval = 6;
 
     return 9;
-  } else {
+  } else if (score < 5000) {
     music.pause();
     music.currentTime = 0;
     musicSpeed.play();
     return 5;
+  } else if (score == 10000) {
+    background.style.backgroundImage = "url(LandscapeBURNINHELLHAHAHA.gif)";
+    musicSpeed.pause();
+    musicSpeed.currentTime = 0;
+    HELL.play();
+    jumpInterval = 4;
+    grenouille.classList.add("hell");
+    return 4;
   }
 }
 
@@ -264,10 +275,13 @@ function moveObstacle() {
       background.style.backgroundImage = "url(Landscape.gif)";
       grenouille.classList.remove("sunset");
       grenouille.classList.remove("night");
+      grenouille.classList.remove("hell");
       music.pause();
       music.currentTime = 0;
       musicSpeed.pause();
       musicSpeed.currentTime = 0;
+      HELL.pause();
+      HELL.currentTime = 0;
     }
   }, currentSpeed);
 }

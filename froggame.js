@@ -193,27 +193,35 @@ function getObstacleSpeed() {
   if (score < 1000) {
     jumpInterval = 12;
     return 20;
-  } else if (score < 2000) {
+  } else if (score < 1500) {
     grenouille.classList.add("sunset");
     background.style.backgroundImage = "url(LandscapeSunset.gif)";
-
+    obstaclePos = 1000;
     jumpInterval = 10;
     return 15;
+  } else if (score < 2000) {
+    obstaclePos = 1000;
+    jumpInterval = 9;
+    return 13;
   } else if (score < 3000) {
-    jumpInterval = 8;
+    obstaclePos = 1000;
+    jumpInterval = 9;
     return 10;
   } else if (score < 4000) {
+    obstaclePos = 1000;
     grenouille.classList.add("night");
     background.style.backgroundImage = "url(LandscapeNight.gif)";
-    jumpInterval = 6;
-
+    jumpInterval = 7;
     return 9;
-  } else if (score < 5000) {
+  } else if (score < 6000) {
+    obstaclePos = 1000;
     music.pause();
     music.currentTime = 0;
     musicSpeed.play();
-    return 5;
+    jumpInterval = 7;
+    return 6;
   } else if (score == 10000) {
+    obstaclePos = 1000;
     background.style.backgroundImage = "url(LandscapeBURNINHELLHAHAHA.gif)";
     musicSpeed.pause();
     musicSpeed.currentTime = 0;

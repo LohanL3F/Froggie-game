@@ -190,16 +190,16 @@ function increaseScoreDynamic(points) {
 // DÉPLACEMENT DE L'OBSTACLE
 // VITESSE DES OBSTACLES
 function getObstacleSpeed() {
-  if (score < 1000) {
+  if (score < 500) {
     jumpInterval = 12;
     return 20;
-  } else if (score < 1500) {
-    grenouille.classList.add("sunset");
-    background.style.backgroundImage = "url(LandscapeSunset.gif)";
+  } else if (score < 1000) {
     obstaclePos = 1000;
     jumpInterval = 10;
     return 15;
   } else if (score < 2000) {
+    grenouille.classList.add("sunset");
+    background.style.backgroundImage = "url(LandscapeSunset.gif)";
     obstaclePos = 1000;
     jumpInterval = 9;
     return 13;
@@ -441,3 +441,4 @@ function addScore(score) {
 
 // Affiche les scores au chargement
 displayHighScores();
+

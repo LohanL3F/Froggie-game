@@ -11,6 +11,8 @@ music.volume = 0.3;
 const musicSpeed = new Audio("gameOSTSPEED.mp3");
 musicSpeed.loop = true;
 musicSpeed.volume = 0.3;
+const fart = new Audio("fart.mp3");
+fart.volume = 0.3;
 
 let jumpInterval = 12; // vitesse du setInterval
 let soundEnabled = false;
@@ -23,6 +25,8 @@ let obstacleInterval; // Intervalle de déplacement de l'obstacle
 let gameover = document.getElementById("gameover");
 let isSliding = false; // pour savoir si la grenouille glisse
 let isTwerking = false; // pour savoir si la grenouille twerk (mdrr)
+let isFarting = false; // pour savoir si la grenouille pète (pitié à l'aide)
+
 // ÉTAT INITIAL (jeu non démarré)
 
 grenouille.style.backgroundImage = "url(frog-sleep.gif)"; // Image fixe de la grenouille
@@ -97,6 +101,23 @@ function stopSlide() {
   grenouille.style.width = "100px";
   grenouille.style.backgroundImage = "url(frog-run.gif)";
   grenouille.style.transform = "translateX(0px)";
+}
+
+// FART
+function startFart() {
+  if (isJumping || isSliding || isTwerking || isFarting) return;
+  isFarting = true;
+  grenouille.style.backgroundImage = "url(frog-fart.gif)";
+  if (soundEnabled) {
+    fart.play();
+    fart.currentTime = 0;
+  }
+}
+
+function stopFart() {
+  if (!isFarting) return;
+  isFarting = false;
+  grenouille.style.backgroundImage = "url(frog-run.gif)";
 }
 
 // Twerk
@@ -303,5 +324,25 @@ document.addEventListener("keydown", (e) => {
 document.addEventListener("keyup", (e) => {
   if (e.code === "ArrowLeft" || e.key.toLowerCase() === "t") {
     stopTwerk();
+  }
+});
+
+// Fart
+document.addEventListener("keydown", (e) => {
+  if (e.code === "ArrowRight" || e.key.toLocaleLowerCase() === "r") {
+    startFart();
+  }
+});
+document.addEventListener("keyup", (e) => {
+  if (e.code === "ArrowRight" || e.key.toLocaleLowerCase() === "r") {
+    stopFart();
+  }
+});
+
+// Empêcher le scroll de la page par flèches
+
+window.addEventListener("keydown", function (e) {
+  if (e.key === "ArrowUp" || e.key === "ArrowDown") {
+    e.preventDefault();
   }
 });

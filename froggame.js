@@ -278,6 +278,7 @@ function moveObstacle() {
 
       grenouille.style.backgroundImage = "url(frog-sleep.gif)";
       scorefinal.textContent = "TON SCORE FINAL EST : " + score;
+      addScore(score);
       score = 0;
       scoreEl.textContent = "Score: " + score;
       background.style.backgroundImage = "url(Landscape.gif)";
@@ -372,3 +373,71 @@ document.addEventListener("keyup", (e) => {
     stopFart();
   }
 });
+
+// SCOREBOARD AVEC PSEUDO PERMANENT
+
+const highScoresList = document.getElementById("high-scores-list");
+const playerNameInput = document.getElementById("player-name");
+const submitNameBtn = document.getElementById("submit-name");
+
+// Récupérer le pseudo du joueur ou mettre "ANONYME"
+let playerName = localStorage.getItem("froggyPlayerName") || "ANONYME";
+playerNameInput.value = playerName;
+
+// Récupérer les scores depuis localStorage
+function getHighScores() {
+  const scores = localStorage.getItem("froggyHighScores");
+  return scores ? JSON.parse(scores) : [];
+}
+
+// Sauvegarder les scores dans localStorage
+function saveHighScores(scores) {
+  localStorage.setItem("froggyHighScores", JSON.stringify(scores));
+}
+
+// Afficher le tableau des scores
+function displayHighScores() {
+  const scores = getHighScores();
+  highScoresList.innerHTML = "";
+  scores.forEach((entry) => {
+    const li = document.createElement("li");
+    li.textContent = `${entry.name} : ${entry.score}`;
+    highScoresList.appendChild(li);
+  });
+}
+
+// Valider le pseudo
+submitNameBtn.onclick = () => {
+  const newName = playerNameInput.value.trim();
+  if (newName) {
+    playerName = newName;
+    localStorage.setItem("froggyPlayerName", playerName);
+  }
+  playerNameInput.value = "";
+};
+
+// Ajouter un score
+function addScore(score) {
+  if (score <= 0) return;
+
+  let scores = getHighScores();
+
+  // Vérifie si le joueur a déjà un score
+  const existing = scores.find((e) => e.name === playerName);
+  if (existing) {
+    // Garde seulement le meilleur score
+    if (score > existing.score) existing.score = score;
+  } else {
+    scores.push({ name: playerName, score });
+  }
+
+  // Tri décroissant et garde top 5
+  scores.sort((a, b) => b.score - a.score);
+  scores = scores.slice(0, 5);
+
+  saveHighScores(scores);
+  displayHighScores();
+}
+
+// Affiche les scores au chargement
+displayHighScores();

@@ -50,6 +50,10 @@ body {
   filter: hue-rotate(160deg) brightness(0.8);
 }
 
+#frog.hell {
+  filter: hue-rotate(290deg) brightness(0.8);
+}
+
 #obstacle {
   width: 80px;
   height: 160px;

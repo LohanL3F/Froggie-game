@@ -145,3 +145,83 @@ body {
   background-size: cover;
   image-rendering: pixelated;
 }
+
+/* =========================
+   Formulaire pseudo pour scoreboard
+========================= */
+
+#enter-name-container {
+  width: 900px;
+  background-color: black;
+  border: 2px solid white;
+  border-radius: 20px;
+  padding: 15px;
+  margin-top: 20px;
+  font-family: Pixelify Sans, sans-serif;
+  color: #fff;
+  text-align: center;
+  /* plus besoin de display:none */
+}
+
+#enter-name-container p {
+  margin: 0 0 10px 0;
+  font-size: 18px;
+}
+
+#player-name {
+  padding: 5px 10px;
+  font-size: 18px;
+  border-radius: 10px;
+  border: 2px solid white;
+  background-color: #000;
+  color: #fff;
+  font-family: Pixelify Sans, sans-serif;
+  outline: none;
+  width: 200px;
+  text-align: center;
+}
+
+#player-name:focus {
+  border-color: #fff;
+}
+
+#submit-name {
+  padding: 5px 15px;
+  font-size: 18px;
+  border-radius: 10px;
+  border: 2px solid white;
+  background-color: black;
+  color: #fff;
+  font-family: Pixelify Sans, sans-serif;
+  cursor: pointer;
+  margin-left: 10px;
+  transition: all 0.2s ease;
+}
+
+#submit-name:hover {
+  background-color: #fff;
+  color: #321c16;
+  transform: scale(1.05);
+}
+
+#scoreboard-container {
+  width: 900px;
+  margin-top: 20px;
+  padding: 10px;
+  border: 2px solid white;
+  border-radius: 20px;
+  color: #fff;
+  font-family: Pixelify Sans, sans-serif;
+  text-align: center;
+}
+
+#scoreboard-container h2 {
+  margin: 5px 0;
+}
+
+#scoreboard-container ol {
+  list-style: decimal;
+  padding-left: 20px;
+  margin: 0;
+  font-size: 18px;
+}

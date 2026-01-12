@@ -3,12 +3,16 @@ const obstacle = document.getElementById("obstacle");
 const scoreEl = document.getElementById("score");
 const twerkMusic = new Audio("CardiBWAP.mp3"); // Je suis tellement désolé pour cette ligne
 twerkMusic.loop = true;
-twerkMusic.volume = 0.1;
+twerkMusic.volume = 0.3;
 const soundBtn = document.getElementById("sound");
 const music = new Audio("gameOST.mp3");
 music.loop = true;
 music.volume = 0.3;
+const musicSpeed = new Audio("gameOSTSPEED.mp3");
+musicSpeed.loop = true;
+musicSpeed.volume = 0.3;
 
+let jumpInterval = 12; // vitesse du setInterval
 let soundEnabled = false;
 let scorefinal = document.getElementById("final-score");
 let background = document.getElementById("game");
@@ -68,12 +72,12 @@ function jump() {
           setTimeout(() => grenouille.classList.remove("pop"), 150);
         }
         jumpHeight -= 5; // Diminue la hauteur du saut
-      }, 12); // Vitesse de descente
+      }, jumpInterval); // Vitesse de descente
     } else {
       jumpHeight += 5; // Augmente la hauteur du saut
       grenouille.style.bottom = jumpHeight + "px"; // Met à jour la position verticale de la grenouille
     }
-  }, 12); // Vitesse de montée
+  }, jumpInterval); // Vitesse de montée
 }
 // SLIDE
 function startSlide() {
@@ -150,16 +154,30 @@ function increaseScoreDynamic(points) {
 // DÉPLACEMENT DE L'OBSTACLE
 // VITESSE DES OBSTACLES
 function getObstacleSpeed() {
-  if (score < 1000) return 20;
-  else if (score < 2000) {
+  if (score < 1000) {
+    jumpInterval = 12;
+    return 20;
+  } else if (score < 2000) {
     grenouille.classList.add("sunset");
     background.style.backgroundImage = "url(LandscapeSunset.gif)";
+
+    jumpInterval = 10;
     return 15;
-  } else if (score < 3000) return 10;
-  else {
+  } else if (score < 3000) {
+    jumpInterval = 8;
+    return 10;
+  } else if (score < 4000) {
     grenouille.classList.add("night");
     background.style.backgroundImage = "url(LandscapeNight.gif)";
+    jumpInterval = 6;
+
+    music.pause();
+    music.currentTime = 0;
+    musicSpeed.play();
+
     return 9;
+  } else {
+    return 5;
   }
 }
 
@@ -216,6 +234,8 @@ function moveObstacle() {
       grenouille.classList.remove("night");
       music.pause();
       music.currentTime = 0;
+      musicSpeed.pause();
+      musicSpeed.currentTime = 0;
     }
   }, currentSpeed);
 }
@@ -286,4 +306,3 @@ document.addEventListener("keyup", (e) => {
     stopTwerk();
   }
 });
-

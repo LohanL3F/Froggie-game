@@ -1,3 +1,15 @@
+// Empêcher le scroll de la page par flèches
+
+window.addEventListener("keydown", function (e) {
+  if (
+    ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "Space"].includes(
+      e.code
+    )
+  ) {
+    e.preventDefault(); // empêche le navigateur de scroller
+  }
+});
+
 const grenouille = document.getElementById("frog");
 const obstacle = document.getElementById("obstacle");
 const scoreEl = document.getElementById("score");
@@ -336,13 +348,5 @@ document.addEventListener("keydown", (e) => {
 document.addEventListener("keyup", (e) => {
   if (e.code === "ArrowRight" || e.key.toLocaleLowerCase() === "r") {
     stopFart();
-  }
-});
-
-// Empêcher le scroll de la page par flèches
-
-window.addEventListener("keydown", function (e) {
-  if (e.key === "ArrowUp" || e.key === "ArrowDown") {
-    e.preventDefault();
   }
 });

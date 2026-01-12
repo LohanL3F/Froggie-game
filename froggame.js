@@ -171,12 +171,11 @@ function getObstacleSpeed() {
     background.style.backgroundImage = "url(LandscapeNight.gif)";
     jumpInterval = 6;
 
+    return 9;
+  } else {
     music.pause();
     music.currentTime = 0;
     musicSpeed.play();
-
-    return 9;
-  } else {
     return 5;
   }
 }

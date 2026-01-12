@@ -109,9 +109,20 @@ body {
   font-family: Pixelify Sans, sans-serif;
   width: 900px;
   height: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  flex-wrap: wrap;
+  height: 300px;
 }
 
 #start-tip {
+  text-align: center;
+  color: white;
+  font-family: Pixelify Sans, sans-serif;
+}
+
+#start-tip-controls {
   text-align: center;
   color: white;
   font-family: Pixelify Sans, sans-serif;

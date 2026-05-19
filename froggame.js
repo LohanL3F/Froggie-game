@@ -13,9 +13,6 @@ window.addEventListener("keydown", function (e) {
 const grenouille = document.getElementById("frog");
 const obstacle = document.getElementById("obstacle");
 const scoreEl = document.getElementById("score");
-const twerkMusic = new Audio("CardiBWAP.mp3"); // Je suis tellement désolé pour cette ligne
-twerkMusic.loop = true;
-twerkMusic.volume = 0.3;
 const soundBtn = document.getElementById("sound");
 const music = new Audio("gameOST.mp3");
 music.loop = true;
@@ -23,8 +20,6 @@ music.volume = 0.3;
 const musicSpeed = new Audio("gameOSTSPEED.mp3");
 musicSpeed.loop = true;
 musicSpeed.volume = 0.3;
-const fart = new Audio("fart.mp3");
-fart.volume = 0.3;
 const HELL = new Audio("HELLOST.mp3");
 HELL.loop = true;
 HELL.volume = 0.3;
@@ -39,8 +34,6 @@ let gameStarted = false; // État du jeu, démarré ou non
 let obstacleInterval; // Intervalle de déplacement de l'obstacle
 let gameover = document.getElementById("gameover");
 let isSliding = false; // pour savoir si la grenouille glisse
-let isTwerking = false; // pour savoir si la grenouille twerk (mdrr)
-let isFarting = false; // pour savoir si la grenouille pète (pitié à l'aide)
 
 // ÉTAT INITIAL (jeu non démarré)
 
@@ -116,55 +109,6 @@ function stopSlide() {
   grenouille.style.width = "100px";
   grenouille.style.backgroundImage = "url(frog-run.gif)";
   grenouille.style.transform = "translateX(0px)";
-}
-
-// FART
-function startFart() {
-  if (isJumping || isSliding || isTwerking || isFarting) return;
-  isFarting = true;
-  grenouille.style.backgroundImage = "url(frog-fart.gif)";
-  if (soundEnabled) {
-    fart.play();
-    fart.currentTime = 0;
-  }
-}
-
-function stopFart() {
-  if (!isFarting) return;
-  isFarting = false;
-  grenouille.style.backgroundImage = "url(frog-run.gif)";
-}
-
-// Twerk
-function startTwerk() {
-  if (isJumping || isSliding || isTwerking) return;
-  isTwerking = true;
-  grenouille.style.height = "100px";
-  grenouille.style.width = "100px";
-  grenouille.style.bottom = "0px";
-  grenouille.style.backgroundImage = "url(frog-twerk.gif)";
-  grenouille.style.transform = "translateY(3px)";
-  twerkMusic.currentTime = 0;
-  twerkMusic.play();
-  if (soundEnabled) {
-    music.pause();
-    twerkMusic.currentTime = 0;
-    twerkMusic.play();
-  }
-}
-
-function stopTwerk() {
-  if (!isTwerking) return;
-  isTwerking = false;
-  grenouille.style.height = "100px";
-  grenouille.style.width = "100px";
-  grenouille.style.backgroundImage = "url(frog-run.gif)";
-  grenouille.style.transform = "translateY(0px)";
-  twerkMusic.pause();
-
-  if (soundEnabled && gameStarted) {
-    music.play();
-  }
 }
 
 // Fonction pour le "POP" du score
@@ -349,30 +293,6 @@ document.addEventListener("keyup", (e) => {
   }
 });
 
-// Twerk
-document.addEventListener("keydown", (e) => {
-  if (e.code === "ArrowLeft" || e.key.toLowerCase() === "t") {
-    startTwerk();
-  }
-});
-
-document.addEventListener("keyup", (e) => {
-  if (e.code === "ArrowLeft" || e.key.toLowerCase() === "t") {
-    stopTwerk();
-  }
-});
-
-// Fart
-document.addEventListener("keydown", (e) => {
-  if (e.code === "ArrowRight" || e.key.toLocaleLowerCase() === "r") {
-    startFart();
-  }
-});
-document.addEventListener("keyup", (e) => {
-  if (e.code === "ArrowRight" || e.key.toLocaleLowerCase() === "r") {
-    stopFart();
-  }
-});
 
 // SCOREBOARD AVEC PSEUDO PERMANENT
 

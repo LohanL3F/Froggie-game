@@ -1,3 +1,4 @@
 # Froggie game : Project for fun
 
-Github pages link : 
+<a href="https://lohanl3f.github.io/Froggie-game/">Click here to try the game !</a>
+<img src="assets/frog-sleep.gif"></img>
